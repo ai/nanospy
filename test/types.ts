@@ -1,4 +1,4 @@
-import { spyOn, resetSpies } from '../index.js'
+import { spyOn, restoreAll } from '../index.js'
 
 class Counter {
   count = 0
@@ -34,4 +34,4 @@ spyOn(counter, 'reset', base => {
   return base
 })
 
-resetSpies()
+restoreAll()

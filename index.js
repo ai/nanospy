@@ -15,7 +15,7 @@ export function spyOn(obj, methodName, mock) {
     nextResult(result) {
       super.next = ['ok', result]
     },
-    reset() {
+    restore() {
       obj[methodName] = origin
     }
   }
@@ -43,9 +43,9 @@ export function spyOn(obj, methodName, mock) {
   return spy
 }
 
-export function resetSpies() {
+export function restoreAll() {
   for (let spy of spies) {
-    spy.reset()
+    spy.restore()
   }
   spies = []
 }

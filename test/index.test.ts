@@ -1,7 +1,7 @@
 import { equal, is, throws } from 'uvu/assert'
 import { test } from 'uvu'
 
-import { spyOn, resetSpies } from '../index.js'
+import { spyOn, restoreAll } from '../index.js'
 
 test('can spy on method', () => {
   let calls: string[] = []
@@ -48,7 +48,7 @@ test('can spy on method', () => {
   equal(spy.calls, [['a'], ['b'], ['c'], ['d']])
   equal(spy.results, ['a!', 'b!', 'C!', undefined])
 
-  spy.reset()
+  spy.restore()
   equal(obj.method('e'), 'e!')
   equal(calls, ['a', 'b', 'e'])
   equal(spy.callCount, 4)
@@ -75,7 +75,7 @@ test('resets all spies', () => {
   equal(spy1.callCount, 1)
   equal(spy2.callCount, 0)
 
-  resetSpies()
+  restoreAll()
   one.method('b')
   two.method('b')
   equal(spy1.callCount, 1)

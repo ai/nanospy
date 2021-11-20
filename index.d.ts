@@ -7,7 +7,7 @@ export interface Spy<
   results: ReturnType<Fn>[]
   nextError(error: Error): void
   nextResult(result: ReturnType<Fn>): void
-  reset(): void
+  restore(): void
 }
 
 type Methods<Obj extends object> = {
@@ -48,11 +48,11 @@ export function spyOn<Obj extends object, Method extends Methods<Obj>>(
  * Remove all spies from objects.
  *
  * ```js
- * import { resetSpies } from 'nanospy'
+ * import { restoreAll } from 'nanospy'
  *
  * afterEach(() => {
- *   resetSpies()
+ *   restoreAll()
  * })
  * ```
  */
-export function resetSpies(): void
+export function restoreAll(): void
