@@ -21,7 +21,7 @@ type Methods<Obj extends object> = {
  * import { spyOn } from 'nanospy'
  *
  * it('calls increase', () => {
- *   let increase = spyOn(counter, increase)
+ *   let increase = spyOn(counter, 'increase')
  *   counter.increase(5)
  *   expect(increase.called).toBe(true)
  *   expect(increase.callCount).toBe(1)
