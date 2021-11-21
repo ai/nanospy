@@ -21,6 +21,26 @@ test('calls increase', () => {
 })
 ```
 
+You can also mock method:
+
+```js
+let spy = spyOn(global, 'fetch', async () => {
+  return {
+    json: () => ({ posts })
+  }
+})
+```
+
+Or change next function call:
+
+```js
+spy.nextResult({ ok: false })
+```
+
+```js
+spy.nextError(error)
+```
+
 <a href="https://evilmartians.com/?utm_source=nanospy">
   <img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg"
        alt="Sponsored by Evil Martians" width="236" height="54">
