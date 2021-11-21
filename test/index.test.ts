@@ -1,7 +1,7 @@
 import { equal, is, throws } from 'uvu/assert'
 import { test } from 'uvu'
 
-import { spyOn, restoreAll } from '../index.js'
+import { spyOn, spy, restoreAll } from '../index.js'
 
 test('can spy on method', () => {
   let calls: string[] = []
@@ -12,48 +12,48 @@ test('can spy on method', () => {
     }
   }
 
-  let spy = spyOn(obj, 'method')
-  is(spy.called, false)
-  equal(spy.callCount, 0)
-  equal(spy.calls, [])
-  equal(spy.results, [])
+  let method = spyOn(obj, 'method')
+  is(method.called, false)
+  equal(method.callCount, 0)
+  equal(method.calls, [])
+  equal(method.results, [])
 
   equal(obj.method('a'), 'a!')
   equal(calls, ['a'])
-  is(spy.called, true)
-  equal(spy.callCount, 1)
-  equal(spy.calls, [['a']])
-  equal(spy.results, ['a!'])
+  is(method.called, true)
+  equal(method.callCount, 1)
+  equal(method.calls, [['a']])
+  equal(method.results, ['a!'])
 
   equal(obj.method('b'), 'b!')
   equal(calls, ['a', 'b'])
-  equal(spy.callCount, 2)
-  equal(spy.calls, [['a'], ['b']])
-  equal(spy.results, ['a!', 'b!'])
+  equal(method.callCount, 2)
+  equal(method.calls, [['a'], ['b']])
+  equal(method.results, ['a!', 'b!'])
 
-  spy.nextResult('C!')
+  method.nextResult('C!')
   equal(obj.method('c'), 'C!')
   equal(calls, ['a', 'b'])
-  equal(spy.callCount, 3)
-  equal(spy.calls, [['a'], ['b'], ['c']])
-  equal(spy.results, ['a!', 'b!', 'C!'])
+  equal(method.callCount, 3)
+  equal(method.calls, [['a'], ['b'], ['c']])
+  equal(method.results, ['a!', 'b!', 'C!'])
 
   let error = new Error('test')
-  spy.nextError(error)
+  method.nextError(error)
   throws(() => {
     obj.method('d')
   }, error)
   equal(calls, ['a', 'b'])
-  equal(spy.callCount, 4)
-  equal(spy.calls, [['a'], ['b'], ['c'], ['d']])
-  equal(spy.results, ['a!', 'b!', 'C!', undefined])
+  equal(method.callCount, 4)
+  equal(method.calls, [['a'], ['b'], ['c'], ['d']])
+  equal(method.results, ['a!', 'b!', 'C!', undefined])
 
-  spy.restore()
+  method.restore()
   equal(obj.method('e'), 'e!')
   equal(calls, ['a', 'b', 'e'])
-  equal(spy.callCount, 4)
-  equal(spy.calls, [['a'], ['b'], ['c'], ['d']])
-  equal(spy.results, ['a!', 'b!', 'C!', undefined])
+  equal(method.callCount, 4)
+  equal(method.calls, [['a'], ['b'], ['c'], ['d']])
+  equal(method.results, ['a!', 'b!', 'C!', undefined])
 })
 
 test('resets all spies', () => {
@@ -91,16 +91,67 @@ test('mocks method', () => {
     }
   }
 
-  let spy = spyOn(obj, 'method', arg => {
+  let method = spyOn(obj, 'method', arg => {
     return arg.toUpperCase() + '!'
   })
 
   equal(obj.method('a'), 'A!')
   equal(calls, [])
-  is(spy.called, true)
-  equal(spy.callCount, 1)
-  equal(spy.calls, [['a']])
-  equal(spy.results, ['A!'])
+  is(method.called, true)
+  equal(method.callCount, 1)
+  equal(method.calls, [['a']])
+  equal(method.results, ['A!'])
+})
+
+test('has spy for callback', () => {
+  let fn = spy()
+  is(fn.called, false)
+  equal(fn.callCount, 0)
+  equal(fn.calls, [])
+  equal(fn.results, [])
+
+  is(fn('a', 'A'), undefined)
+  is(fn.called, true)
+  equal(fn.callCount, 1)
+  equal(fn.calls, [['a', 'A']])
+  equal(fn.results, [undefined])
+
+  fn.nextResult('B!')
+  equal(fn('b', 'B'), 'B!')
+  equal(fn.callCount, 2)
+  equal(fn.calls, [
+    ['a', 'A'],
+    ['b', 'B']
+  ])
+  equal(fn.results, [undefined, 'B!'])
+
+  is(fn('c', 'C'), undefined)
+  equal(fn.callCount, 3)
+  equal(fn.results, [undefined, 'B!', undefined])
+
+  let error = new Error('test')
+  fn.nextError(error)
+  throws(fn, error)
+  equal(fn.callCount, 4)
+  equal(fn.results, [undefined, 'B!', undefined, undefined])
+})
+
+test('supports spy with callback', () => {
+  let fn = spy((name: string): string => {
+    return name + '!'
+  })
+
+  equal(fn('a'), 'a!')
+  is(fn.called, true)
+  equal(fn.callCount, 1)
+  equal(fn.calls, [['a']])
+  equal(fn.results, ['a!'])
+
+  fn.nextResult('B!')
+  equal(fn('b'), 'B!')
+  equal(fn.callCount, 2)
+  equal(fn.calls, [['a'], ['b']])
+  equal(fn.results, ['a!', 'B!'])
 })
 
 test.run()

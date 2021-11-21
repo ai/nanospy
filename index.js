@@ -1,51 +1,87 @@
 let spies = []
 
+export function spy(cb) {
+  let tracker = (...args) => {
+    tracker.called = true
+    tracker.callCount += 1
+    tracker.calls.push(args)
+    if (tracker.next) {
+      let [nextType, nextResult] = tracker.next
+      tracker.next = false
+      if (nextType === 'error') {
+        tracker.results.push(undefined)
+        throw nextResult
+      } else {
+        tracker.results.push(nextResult)
+        return nextResult
+      }
+    } else {
+      let result
+      if (cb) result = cb(...args)
+      tracker.results.push(result)
+      return result
+    }
+  }
+
+  tracker.called = false
+  tracker.callCount = 0
+  tracker.results = []
+  tracker.calls = []
+  tracker.nextError = error => {
+    tracker.next = ['error', error]
+  }
+  tracker.nextResult = result => {
+    tracker.next = ['ok', result]
+  }
+
+  return tracker
+}
+
 export function spyOn(obj, methodName, mock) {
   let origin = obj[methodName]
   if (!mock) mock = origin
-  let spy = {
+  let tracker = {
     called: false,
     callCount: 0,
     results: [],
     calls: [],
-    next: false,
     nextError(error) {
-      super.next = ['error', error]
+      tracker.next = ['error', error]
     },
     nextResult(result) {
-      super.next = ['ok', result]
+      tracker.next = ['ok', result]
     },
     restore() {
       obj[methodName] = origin
     }
   }
   obj[methodName] = (...args) => {
-    spy.called = true
-    spy.callCount += 1
-    spy.calls.push(args)
-    if (spy.next) {
-      let [nextType, nextResult] = spy.next
-      spy.next = false
+    tracker.called = true
+    tracker.callCount += 1
+    tracker.calls.push(args)
+    if (tracker.next) {
+      let [nextType, nextResult] = tracker.next
+      tracker.next = false
       if (nextType === 'error') {
-        spy.results.push(undefined)
+        tracker.results.push(undefined)
         throw nextResult
       } else {
-        spy.results.push(nextResult)
+        tracker.results.push(nextResult)
         return nextResult
       }
     } else {
       let result = mock.apply(obj, args)
-      spy.results.push(result)
+      tracker.results.push(result)
       return result
     }
   }
-  spies.push(spy)
-  return spy
+  spies.push(tracker)
+  return tracker
 }
 
 export function restoreAll() {
-  for (let spy of spies) {
-    spy.restore()
+  for (let tracker of spies) {
+    tracker.restore()
   }
   spies = []
 }

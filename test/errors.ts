@@ -1,4 +1,4 @@
-import { spyOn, restoreAll } from '../index.js'
+import { spyOn, restoreAll, spy } from '../index.js'
 
 class Counter {
   count = 0
@@ -39,3 +39,11 @@ spyOn(counter, 'reset', base => {
 })
 
 restoreAll()
+
+let fn = spy((str: string): number => {
+  return str.length
+})
+// THROWS 'number' is not assignable to parameter of type 'string'
+fn(2)
+// THROWS 'number' is not assignable to parameter of type 'boolean'
+testBoolean(fn('a'))

@@ -10,9 +10,34 @@ export interface Spy<
   restore(): void
 }
 
+export interface SpyFn<
+  Fn extends (...args: any[]) => any = (...args: any[]) => any
+> extends Spy {
+  (...args: Parameters<Fn>): ReturnType<Fn>
+}
+
 type Methods<Obj extends object> = {
   [Key in keyof Obj]-?: Obj[Key] extends (...args: any[]) => any ? Key : never
 }[keyof Obj]
+
+/**
+ * Create spy to track callbacks.
+ *
+ * ```
+ * import { spy } from 'nanospy'
+ *
+ * let fn = spy()
+ * fn('a', 10)
+ * spy.callCount //=> 1
+ * spy.calls //=> [['a', 10]]
+ * ```
+ *
+ * @param cb Optional spy’s callback.
+ * @returns Spy functions with tracker’s properties.
+ */
+export function spy<
+  Fn extends (...args: any[]) => any = (...args: any[]) => any
+>(cb?: Fn): SpyFn<Fn>
 
 /**
  * Add spy to track how object’s method was called.

@@ -1,4 +1,4 @@
-import { spyOn, restoreAll } from '../index.js'
+import { spyOn, restoreAll, spy } from '../index.js'
 
 class Counter {
   count = 0
@@ -35,3 +35,8 @@ spyOn(counter, 'reset', base => {
 })
 
 restoreAll()
+
+let fn = spy((str: string): number => {
+  return str.length
+})
+testNumber(fn('a'))
