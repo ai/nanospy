@@ -13,7 +13,7 @@ test.after.each(() => {
 })
 
 test('calls increase', () => {
-  let spy = spyOn(counter, increase)
+  let spy = spyOn(counter, 'increase')
   counter.increase(5)
   assert.is(spy.called, true)
   assert.equal(spy.callCount, 1)
