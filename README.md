@@ -3,7 +3,7 @@
 A tiny Node.js library to spy and mock methods in tests
 with great **TypeScript** support.
 
-It will took only **[5 KB](https://packagephobia.com/result?p=nanospy)**
+It will took only **[6 KB](https://packagephobia.com/result?p=nanospy)**
 in your `node_modules` and have **0 dependencies**.
 
 ```js
