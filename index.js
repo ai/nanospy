@@ -40,41 +40,13 @@ export function spy(cb) {
 export function spyOn(obj, methodName, mock) {
   let origin = obj[methodName]
   if (!mock) mock = origin
-  let tracker = {
-    called: false,
-    callCount: 0,
-    results: [],
-    calls: [],
-    nextError(error) {
-      tracker.next = ['error', error]
-    },
-    nextResult(result) {
-      tracker.next = ['ok', result]
-    },
-    restore() {
-      obj[methodName] = origin
-    }
+  let tracker = spy(mock.bind(obj));
+  tracker.restore = () => {
+    obj[methodName] = origin
   }
-  obj[methodName] = (...args) => {
-    tracker.called = true
-    tracker.callCount += 1
-    tracker.calls.push(args)
-    if (tracker.next) {
-      let [nextType, nextResult] = tracker.next
-      tracker.next = false
-      if (nextType === 'error') {
-        tracker.results.push(undefined)
-        throw nextResult
-      } else {
-        tracker.results.push(nextResult)
-        return nextResult
-      }
-    } else {
-      let result = mock.apply(obj, args)
-      tracker.results.push(result)
-      return result
-    }
-  }
+
+  obj[methodName] = tracker;
+
   spies.push(tracker)
   return tracker
 }
