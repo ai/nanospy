@@ -1,59 +1,59 @@
 let spies = []
 
 export function spy(cb) {
-  let tracker = (...args) => {
-    tracker.called = true
-    tracker.callCount += 1
-    tracker.calls.push(args)
-    if (tracker.next) {
-      let [nextType, nextResult] = tracker.next
-      tracker.next = false
+  let fn = (...args) => {
+    fn.called = true
+    fn.callCount += 1
+    fn.calls.push(args)
+    if (fn.next) {
+      let [nextType, nextResult] = fn.next
+      fn.next = false
       if (nextType === 'error') {
-        tracker.results.push(undefined)
+        fn.results.push(undefined)
         throw nextResult
       } else {
-        tracker.results.push(nextResult)
+        fn.results.push(nextResult)
         return nextResult
       }
     } else {
       let result
       if (cb) result = cb(...args)
-      tracker.results.push(result)
+      fn.results.push(result)
       return result
     }
   }
 
-  tracker.called = false
-  tracker.callCount = 0
-  tracker.results = []
-  tracker.calls = []
-  tracker.nextError = error => {
-    tracker.next = ['error', error]
+  fn.called = false
+  fn.callCount = 0
+  fn.results = []
+  fn.calls = []
+  fn.nextError = error => {
+    fn.next = ['error', error]
   }
-  tracker.nextResult = result => {
-    tracker.next = ['ok', result]
+  fn.nextResult = result => {
+    fn.next = ['ok', result]
   }
 
-  return tracker
+  return fn
 }
 
 export function spyOn(obj, methodName, mock) {
   let origin = obj[methodName]
   if (!mock) mock = origin
-  let tracker = spy(mock.bind(obj));
-  tracker.restore = () => {
+  let fn = spy(mock.bind(obj))
+  fn.restore = () => {
     obj[methodName] = origin
   }
 
-  obj[methodName] = tracker;
+  obj[methodName] = fn
 
-  spies.push(tracker)
-  return tracker
+  spies.push(fn)
+  return fn
 }
 
 export function restoreAll() {
-  for (let tracker of spies) {
-    tracker.restore()
+  for (let fn of spies) {
+    fn.restore()
   }
   spies = []
 }
