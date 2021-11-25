@@ -16,6 +16,7 @@ test('can spy on method', () => {
   is(method.called, false)
   equal(method.callCount, 0)
   equal(method.calls, [])
+  equal(method.length, 1)
   equal(method.results, [])
 
   equal(obj.method('a'), 'a!')
@@ -108,6 +109,7 @@ test('has spy for callback', () => {
   is(fn.called, false)
   equal(fn.callCount, 0)
   equal(fn.calls, [])
+  equal(fn.length, 0)
   equal(fn.results, [])
 
   is(fn('a', 'A'), undefined)
@@ -140,6 +142,8 @@ test('supports spy with callback', () => {
   let fn = spy((name: string): string => {
     return name + '!'
   })
+
+  equal(fn.length, 1)
 
   equal(fn('a'), 'a!')
   is(fn.called, true)
