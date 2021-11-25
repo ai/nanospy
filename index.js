@@ -23,6 +23,7 @@ export function spy(cb) {
     }
   }
 
+  Object.defineProperty(fn, 'length', { value: cb ? cb.length : 0 });
   fn.called = false
   fn.callCount = 0
   fn.results = []

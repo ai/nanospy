@@ -4,6 +4,7 @@ export interface Spy<
   called: boolean
   callCount: number
   calls: Parameters<Fn>[]
+  length: number
   results: ReturnType<Fn>[]
   nextError(error: Error): void
   nextResult(result: ReturnType<Fn>): void
