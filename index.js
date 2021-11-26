@@ -1,6 +1,6 @@
 let spies = []
 
-export function spy(cb) {
+function spy(cb) {
   let fn = (...args) => {
     fn.called = true
     fn.callCount += 1
@@ -23,7 +23,7 @@ export function spy(cb) {
     }
   }
 
-  Object.defineProperty(fn, 'length', { value: cb ? cb.length : 0 });
+  Object.defineProperty(fn, 'length', { value: cb ? cb.length : 0 })
   fn.called = false
   fn.callCount = 0
   fn.results = []
@@ -38,7 +38,7 @@ export function spy(cb) {
   return fn
 }
 
-export function spyOn(obj, methodName, mock) {
+function spyOn(obj, methodName, mock) {
   let origin = obj[methodName]
   if (!mock) mock = origin
   let fn = spy(mock.bind(obj))
@@ -52,9 +52,13 @@ export function spyOn(obj, methodName, mock) {
   return fn
 }
 
-export function restoreAll() {
+function restoreAll() {
   for (let fn of spies) {
     fn.restore()
   }
   spies = []
 }
+
+module.exports.spy = spy
+module.exports.spyOn = spyOn
+module.exports.restoreAll = restoreAll
