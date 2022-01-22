@@ -81,8 +81,8 @@ import { spy } from 'nanospy'
 
 let fn = spy()
 fn('a', 10)
-spy.callCount //=> 1
-spy.calls //=> [['a', 10]]
+fn.callCount //=> 1
+fn.calls //=> [['a', 10]]
 ```
 
 You can pass `spy`’s callback:
@@ -97,9 +97,9 @@ fn('Ivan') //=> Hello, Ivan!
 Or change next function call:
 
 ```js
-spy.nextResult({ ok: false })
+fn.nextResult({ ok: false })
 ```
 
 ```js
-spy.nextError(error)
+fn.nextError(error)
 ```
