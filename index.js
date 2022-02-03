@@ -17,13 +17,12 @@ function spy(cb) {
       }
     } else {
       let result
-      if (cb) result = cb(...args)
+      if (fn.impl) result = fn.impl(...args)
       fn.results.push(result)
       return result
     }
   }
 
-  Object.defineProperty(fn, 'length', { value: cb ? cb.length : 0 })
   fn.called = false
   fn.callCount = 0
   fn.results = []
@@ -34,6 +33,11 @@ function spy(cb) {
   fn.nextResult = result => {
     fn.next = ['ok', result]
   }
+  fn.onCall = cb => {
+    Object.defineProperty(fn, 'length', { value: cb ? cb.length : 0 })
+    fn.impl = cb;
+  }
+  fn.onCall(cb);
 
   return fn
 }
