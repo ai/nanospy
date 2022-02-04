@@ -14,7 +14,7 @@ test.after.each(() => {
 })
 
 test('calls increase', () => {
-  let spy = spyOn(counter, 'increase')
+  const spy = spyOn(counter, 'increase')
   counter.increase(5)
   assert.equal(spy.callCount, 1)
   assert.equal(spy.calls, [[5]])
@@ -41,7 +41,7 @@ test.after.each(() => {
 })
 
 test('calls increase', () => {
-  let spy = spyOn(counter, 'increase')
+  const spy = spyOn(counter, 'increase')
   counter.increase(5)
   assert.is(spy.called, true)
   assert.equal(spy.callCount, 1)
@@ -55,7 +55,7 @@ test('calls increase', () => {
 Mock change the method’s behavior.
 
 ```js
-let spy = spyOn(global, 'fetch', async () => {
+const spy = spyOn(global, 'fetch', async () => {
   return {
     json: () => ({ posts })
   }
@@ -79,7 +79,7 @@ spy.nextError(error)
 ```js
 import { spy } from 'nanospy'
 
-let fn = spy()
+const fn = spy()
 fn('a', 10)
 fn.callCount //=> 1
 fn.calls //=> [['a', 10]]
@@ -107,20 +107,17 @@ fn.nextError(error)
 ### Remocking
 
 You can reassign mocked function with `onCall` method:
+
 ```js
 const obj = {
-  fn: (n: string) => n + '!',
+  mark: str => str + '!',
 }
-const spy = spyOn(obj, 'fn')
+const spy = spyOn(obj, 'mark')
 
-obj.fn('a')
+obj.mark('a')
 assert.equal(spy.results, ['a!'])
 
-spy.onCall((n) => n + '?')
-obj.fn('a')
+spy.onCall(str => str + '?')
+obj.mark('a')
 assert.equal(spy.results, ['a!', 'a?'])
-
-spy.onCall((n) => n + '.')
-obj.fn('a')
-assert.equal(spy.results, ['a!', 'a?', 'a.'])
 ```
