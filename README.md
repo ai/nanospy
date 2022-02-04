@@ -103,3 +103,24 @@ fn.nextResult({ ok: false })
 ```js
 fn.nextError(error)
 ```
+
+### Remocking
+
+You can reassign mocked function with `onCall` method:
+```js
+const obj = {
+  fn: (n: string) => n + '!',
+}
+const spy = spyOn(obj, 'fn')
+
+obj.fn('a')
+assert.equal(spy.results, ['a!'])
+
+spy.onCall((n) => n + '?')
+obj.fn('a')
+assert.equal(spy.results, ['a!', 'a?'])
+
+spy.onCall((n) => n + '.')
+obj.fn('a')
+assert.equal(spy.results, ['a!', 'a?', 'a.'])
+```
