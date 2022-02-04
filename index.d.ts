@@ -9,6 +9,7 @@ export interface Spy<
   nextError(error: Error): void
   nextResult(result: ReturnType<Fn>): void
   restore(): void
+  onCall(...args: any[]): any
 }
 
 export interface SpyFn<
