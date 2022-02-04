@@ -29,6 +29,8 @@ testBoolean(increase.calls[0][0])
 increase.nextError(new Error('Test'))
 increase.nextResult(10)
 
+increase.onCall(big => (big ? 10 : 1))
+
 spyOn(counter, 'reset', base => {
   testNumber(increase.callCount)
   return base

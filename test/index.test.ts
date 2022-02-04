@@ -139,9 +139,7 @@ test('has spy for callback', () => {
 })
 
 test('supports spy with callback', () => {
-  let fn = spy((name: string): string => {
-    return name + '!'
-  })
+  let fn = spy((name: string): string => name + '!')
 
   equal(fn.length, 1)
 
@@ -159,28 +157,25 @@ test('supports spy with callback', () => {
 })
 
 test('supports remocking', () => {
-  let fn = spy((name: string): string => {
-    return name + '!'
-  })
+  let fn = spy((name: string, very?: boolean) => name + (very ? '!!!' : '!'))
+  equal(fn.length, 2)
   fn.nextResult('ONE!')
   equal(fn('one'), 'ONE!')
 
-  equal(fn('one'), 'one!')
+  equal(fn('one', true), 'one!!!')
   equal(fn.callCount, 2)
-  equal(fn.calls, [['one'], ['one']])
-  equal(fn.results, ['ONE!', 'one!'])
+  equal(fn.calls, [['one'], ['one', true]])
+  equal(fn.results, ['ONE!', 'one!!!'])
 
-  fn.onCall((name: string, family?: string): string => {
-    return name + '?'
-  })
-  equal(fn.length, 2)
+  fn.onCall((name: string) => name + '?')
+  equal(fn.length, 1)
   fn.nextResult('TWO?')
   equal(fn('two'), 'TWO?')
 
   equal(fn('two'), 'two?')
   equal(fn.callCount, 4)
-  equal(fn.calls, [['one'], ['one'], ['two'], ['two']])
-  equal(fn.results, ['ONE!', 'one!', 'TWO?', 'two?'])
+  equal(fn.calls, [['one'], ['one', true], ['two'], ['two']])
+  equal(fn.results, ['ONE!', 'one!!!', 'TWO?', 'two?'])
 })
 
 test.run()

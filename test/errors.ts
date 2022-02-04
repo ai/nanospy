@@ -33,6 +33,9 @@ testNumber(increase.calls[0][0])
 increase.nextError(new Error('Test'))
 increase.nextResult(10)
 
+// THROWS 'boolean' is not assignable to type 'number'
+increase.onCall(() => true)
+
 // THROWS assignable to parameter of type '(newBase: number) => number'
 spyOn(counter, 'reset', base => {
   testNumber(increase.callCount)

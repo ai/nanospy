@@ -33,11 +33,11 @@ function spy(cb) {
   fn.nextResult = result => {
     fn.next = ['ok', result]
   }
-  fn.onCall = cb => {
-    Object.defineProperty(fn, 'length', { value: cb ? cb.length : 0 })
-    fn.impl = cb;
+  fn.onCall = body => {
+    Object.defineProperty(fn, 'length', { value: body ? body.length : 0 })
+    fn.impl = body
   }
-  fn.onCall(cb);
+  fn.onCall(cb)
 
   return fn
 }
