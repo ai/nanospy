@@ -1,7 +1,7 @@
-import { equal, is, throws } from 'uvu/assert'
 import { test } from 'uvu'
+import { equal, is, throws } from 'uvu/assert'
 
-import { spyOn, spy, restoreAll } from '../index.js'
+import { restoreAll, spy, spyOn } from '../index.js'
 
 test('can spy on method', () => {
   let calls: string[] = []

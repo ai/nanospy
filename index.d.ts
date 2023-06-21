@@ -1,15 +1,13 @@
-export interface Spy<
-  Fn extends (...args: any[]) => any = (...args: any[]) => any
-> {
-  called: boolean
+export interface Spy<Fn extends (...args: any[]) => any = (...args: any[]) => any> {
   callCount: number
+  called: boolean
   calls: Parameters<Fn>[]
   length: number
-  results: ReturnType<Fn>[]
   nextError(error: Error): void
   nextResult(result: ReturnType<Fn>): void
-  restore(): void
   onCall(body: Fn): any
+  restore(): void
+  results: ReturnType<Fn>[]
 }
 
 export interface SpyFn<

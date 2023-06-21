@@ -1,4 +1,4 @@
-import { spyOn, restoreAll, spy } from '../index.js'
+import { restoreAll, spy, spyOn } from '../index.js'
 
 class Counter {
   count = 0
