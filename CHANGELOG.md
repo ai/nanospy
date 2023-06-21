@@ -1,6 +1,9 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0
+* Added `Spy#nextResolve()` and `Spy#nextReject()`.
+
 ## 0.5
 * Added `Spy#onCall()` for re-mocking (by Valery Zubkov).
 

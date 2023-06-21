@@ -1,6 +1,6 @@
 {
   "name": "nanospy",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "Spy and mock methods in tests with great TypeScript support",
   "keywords": [
     "spy",
