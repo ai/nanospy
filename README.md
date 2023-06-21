@@ -3,7 +3,7 @@
 A tiny Node.js library to spy and mock methods in tests
 with great **TypeScript** support.
 
-It will take only **[5 KB](https://packagephobia.com/result?p=nanospy)**
+It will take only **[6 KB](https://packagephobia.com/result?p=nanospy)**
 in your `node_modules` and have **0 dependencies**.
 
 ```js
@@ -50,6 +50,7 @@ test('calls increase', () => {
 })
 ```
 
+
 ### Mock
 
 Mock change the method’s behavior.
@@ -71,6 +72,7 @@ spy.nextResult({ ok: false })
 ```js
 spy.nextError(error)
 ```
+
 
 ### Functions
 
@@ -103,6 +105,7 @@ fn.nextResult({ ok: false })
 ```js
 fn.nextError(error)
 ```
+
 
 ### Remocking
 
