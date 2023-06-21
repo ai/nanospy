@@ -2,7 +2,7 @@
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 0.5
-* Added `spy.onCall()` for re-mocking (by Valery Zubkov).
+* Added `Spy#onCall()` for re-mocking (by Valery Zubkov).
 
 ## 0.4
 * Added Node.js 10 and 8 support.
