@@ -178,4 +178,32 @@ test('supports remocking', () => {
   equal(fn.results, ['ONE!', 'one!!!', 'TWO?', 'two?'])
 })
 
+test('mock promises', async () => {
+  let calls: string[] = []
+  let obj = {
+    async method() {
+      return 'one'
+    }
+  }
+
+  let method = spyOn(obj, 'method')
+  let resolve = method.nextResolve()
+  obj.method().then(result => {
+    calls.push(result)
+  })
+
+  equal(calls, [])
+  await resolve('two')
+  equal(calls, ['two'])
+
+  let reject = method.nextReject()
+  obj.method().catch(error => {
+    calls.push(error.message)
+  })
+
+  equal(calls, ['two'])
+  await reject(new Error('three'))
+  equal(calls, ['two', 'three'])
+})
+
 test.run()

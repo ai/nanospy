@@ -4,6 +4,8 @@ export interface Spy<Fn extends (...args: any[]) => any = (...args: any[]) => an
   calls: Parameters<Fn>[]
   length: number
   nextError(error: Error): void
+  nextReject(): (error: Error) => Promise<void>
+  nextResolve(): (result: Awaited<ReturnType<Fn>>) => Promise<void>
   nextResult(result: ReturnType<Fn>): void
   onCall(body: Fn): any
   restore(): void

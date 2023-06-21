@@ -33,6 +33,32 @@ function spy(cb) {
   fn.nextResult = result => {
     fn.next = ['ok', result]
   }
+  fn.nextResolve = () => {
+    let promiseResolve
+    let promise = new Promise(resolve => {
+      promiseResolve = resolve
+    })
+    fn.next = ['ok', promise]
+    return result => {
+      promiseResolve(result)
+      return new Promise(resolve => {
+        setTimeout(resolve, 10)
+      })
+    }
+  }
+  fn.nextReject = () => {
+    let promiseReject
+    let promise = new Promise((resolve, reject) => {
+      promiseReject = reject
+    })
+    fn.next = ['ok', promise]
+    return error => {
+      promiseReject(error)
+      return new Promise(resolve => {
+        setTimeout(resolve, 10)
+      })
+    }
+  }
   fn.onCall = body => {
     Object.defineProperty(fn, 'length', { value: body ? body.length : 0 })
     fn.impl = body

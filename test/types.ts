@@ -8,6 +8,10 @@ class Counter {
     return 0
   }
 
+  async long(): Promise<number> {
+    return 10
+  }
+
   reset(newBase: number): number {
     this.count = newBase
     return newBase
@@ -35,6 +39,11 @@ spyOn(counter, 'reset', base => {
   testNumber(increase.callCount)
   return base
 })
+
+let long = spyOn(counter, 'long')
+let resolve = long.nextResolve()
+counter.long()
+await resolve(10)
 
 restoreAll()
 

@@ -107,6 +107,27 @@ fn.nextError(error)
 ```
 
 
+### Promises
+
+You can use helpers to test promises:
+
+```js
+
+import { spy } from 'nanospy'
+
+const fn = spy()
+
+let resolve = fn.nextResolve()
+fn().then(arg => {
+  console.log('Resolved ' + arg)
+})
+
+await resolve(1) // => Resolved 1
+```
+
+For testing errors, you can use `fn.nextReject()`.
+
+
 ### Remocking
 
 You can reassign mocked function with `onCall` method:
