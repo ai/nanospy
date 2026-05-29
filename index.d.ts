@@ -1,4 +1,5 @@
 export interface Spy<Fn extends (...args: any[]) => any = (...args: any[]) => any> {
+  [Symbol.dispose](): void
   callCount: number
   called: boolean
   calls: Parameters<Fn>[]

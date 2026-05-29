@@ -83,6 +83,32 @@ test('resets all spies', () => {
   equal(spy2.callCount, 0)
 })
 
+let testUsing = Symbol.dispose ? test : test.skip
+testUsing('restores spy via using keyword', () => {
+  let calls: string[] = []
+  let obj = {
+    method(arg: string) {
+      calls.push(arg)
+      return arg + '!'
+    }
+  }
+  let original = obj.method
+
+  // eslint-disable-next-line no-lone-blocks
+  {
+    // eslint-disable-next-line prefer-let/prefer-let
+    using method = spyOn(obj, 'method', arg => arg.toUpperCase() + '!')
+    equal(obj.method('a'), 'A!')
+    equal(calls, [])
+    equal(method.callCount, 1)
+    is(obj.method === original, false)
+  }
+
+  is(obj.method === original, true)
+  equal(obj.method('b'), 'b!')
+  equal(calls, ['b'])
+})
+
 test('mocks method', () => {
   let calls: string[] = []
   let obj = {
