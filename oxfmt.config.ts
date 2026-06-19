@@ -1,3 +1,3 @@
-import loguxOxfmtConfig from "@logux/oxc-configs/fmt";
+import loguxOxfmtConfig from '@logux/oxc-configs/fmt'
 
-export default loguxOxfmtConfig;
+export default loguxOxfmtConfig

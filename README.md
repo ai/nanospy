@@ -26,7 +26,6 @@ test('calls increase', () => {
        alt="Sponsored by Evil Martians" width="236" height="54">
 </a>
 
-
 ## Usage
 
 ### Method Spy
@@ -50,7 +49,6 @@ test('calls increase', () => {
 })
 ```
 
-
 ### Mock
 
 Mock change the method’s behavior.
@@ -72,7 +70,6 @@ spy.nextResult({ ok: false })
 ```js
 spy.nextError(error)
 ```
-
 
 ### Functions
 
@@ -106,13 +103,11 @@ fn.nextResult({ ok: false })
 fn.nextError(error)
 ```
 
-
 ### Promises
 
 You can use helpers to test promises:
 
 ```js
-
 import { spy } from 'nanospy'
 
 const fn = spy()
@@ -141,7 +136,6 @@ test('calls increase', () => {
 }) // `counter.increase` is restored automatically here
 ```
 
-
 This removes the need for `restoreAll()` in an `afterEach` hook for spies declared with `using`.
 
 ### Remocking
@@ -150,7 +144,7 @@ You can reassign mocked function with `onCall` method:
 
 ```js
 const obj = {
-  mark: str => str + '!',
+  mark: str => str + '!'
 }
 const spy = spyOn(obj, 'mark')
 
