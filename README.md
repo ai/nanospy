@@ -28,6 +28,22 @@ test('calls increase', () => {
 
 ## Usage
 
+### `using` Syntax
+
+In Node.js 24+ (or any runtime with [explicit resource management](https://github.com/tc39/proposal-explicit-resource-management) support), you can use the `using` declaration to automatically restore the spy when it goes out of scope:
+
+```js
+import { spyOn } from 'nanospy'
+
+test('calls increase', () => {
+  using spy = spyOn(counter, 'increase')
+  counter.increase(5)
+  assert.equal(spy.callCount, 1)
+}) // `counter.increase` is restored automatically here
+```
+
+This removes the need for `restoreAll()` in an `afterEach` hook for spies declared with `using`.
+
 ### Method Spy
 
 Spy tracks method calls, but do not change method’s behavior.
@@ -121,22 +137,6 @@ await resolve(1) // => Resolved 1
 ```
 
 For testing errors, you can use `fn.nextReject()`.
-
-### `using` Syntax
-
-In Node.js 24+ (or any runtime with [explicit resource management](https://github.com/tc39/proposal-explicit-resource-management) support), you can use the `using` declaration to automatically restore the spy when it goes out of scope:
-
-```js
-import { spyOn } from 'nanospy'
-
-test('calls increase', () => {
-  using spy = spyOn(counter, 'increase')
-  counter.increase(5)
-  assert.equal(spy.callCount, 1)
-}) // `counter.increase` is restored automatically here
-```
-
-This removes the need for `restoreAll()` in an `afterEach` hook for spies declared with `using`.
 
 ### Remocking
 
