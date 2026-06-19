@@ -1,4 +1,6 @@
-export interface Spy<Fn extends (...args: any[]) => any = (...args: any[]) => any> {
+export interface Spy<
+  Fn extends (...args: any[]) => any = (...args: any[]) => any
+> {
   [Symbol.dispose](): void
   callCount: number
   called: boolean
@@ -69,7 +71,6 @@ export function spyOn<Obj extends object, Method extends Methods<Obj>>(
   obj: Obj,
   methodName: Method,
   mock?: Obj[Method]
-  // @ts-ignore
 ): Spy<Obj[Method]>
 
 /**

@@ -29,7 +29,7 @@ let increase = spyOn(counter, 'increase')
 testBoolean(increase.called)
 testNumber(increase.callCount)
 // THROWS 'boolean' is not assignable to parameter of type 'number'
-testNumber(increase.calls[0][0])
+testNumber(increase.calls[0]![0])
 increase.nextError(new Error('Test'))
 increase.nextResult(10)
 

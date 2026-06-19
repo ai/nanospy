@@ -1,5 +1,5 @@
-import { test } from 'uvu'
-import { equal, is, throws } from 'uvu/assert'
+import { deepEqual, equal, throws } from 'node:assert/strict'
+import { test } from 'node:test'
 
 import { restoreAll, spy, spyOn } from '../index.js'
 
@@ -13,48 +13,48 @@ test('can spy on method', () => {
   }
 
   let method = spyOn(obj, 'method')
-  is(method.called, false)
+  equal(method.called, false)
   equal(method.callCount, 0)
-  equal(method.calls, [])
+  deepEqual(method.calls, [])
   equal(method.length, 1)
-  equal(method.results, [])
+  deepEqual(method.results, [])
 
   equal(obj.method('a'), 'a!')
-  equal(calls, ['a'])
-  is(method.called, true)
+  deepEqual(calls, ['a'])
+  equal(method.called, true)
   equal(method.callCount, 1)
-  equal(method.calls, [['a']])
-  equal(method.results, ['a!'])
+  deepEqual(method.calls, [['a']])
+  deepEqual(method.results, ['a!'])
 
   equal(obj.method('b'), 'b!')
-  equal(calls, ['a', 'b'])
+  deepEqual(calls, ['a', 'b'])
   equal(method.callCount, 2)
-  equal(method.calls, [['a'], ['b']])
-  equal(method.results, ['a!', 'b!'])
+  deepEqual(method.calls, [['a'], ['b']])
+  deepEqual(method.results, ['a!', 'b!'])
 
   method.nextResult('C!')
   equal(obj.method('c'), 'C!')
-  equal(calls, ['a', 'b'])
+  deepEqual(calls, ['a', 'b'])
   equal(method.callCount, 3)
-  equal(method.calls, [['a'], ['b'], ['c']])
-  equal(method.results, ['a!', 'b!', 'C!'])
+  deepEqual(method.calls, [['a'], ['b'], ['c']])
+  deepEqual(method.results, ['a!', 'b!', 'C!'])
 
   let error = new Error('test')
   method.nextError(error)
   throws(() => {
     obj.method('d')
   }, error)
-  equal(calls, ['a', 'b'])
+  deepEqual(calls, ['a', 'b'])
   equal(method.callCount, 4)
-  equal(method.calls, [['a'], ['b'], ['c'], ['d']])
-  equal(method.results, ['a!', 'b!', 'C!', undefined])
+  deepEqual(method.calls, [['a'], ['b'], ['c'], ['d']])
+  deepEqual(method.results, ['a!', 'b!', 'C!', undefined])
 
   method.restore()
   equal(obj.method('e'), 'e!')
-  equal(calls, ['a', 'b', 'e'])
+  deepEqual(calls, ['a', 'b', 'e'])
   equal(method.callCount, 4)
-  equal(method.calls, [['a'], ['b'], ['c'], ['d']])
-  equal(method.results, ['a!', 'b!', 'C!', undefined])
+  deepEqual(method.calls, [['a'], ['b'], ['c'], ['d']])
+  deepEqual(method.results, ['a!', 'b!', 'C!', undefined])
 })
 
 test('resets all spies', () => {
@@ -83,8 +83,7 @@ test('resets all spies', () => {
   equal(spy2.callCount, 0)
 })
 
-let testUsing = Symbol.dispose ? test : test.skip
-testUsing('restores spy via using keyword', () => {
+test('restores spy via using keyword', { skip: !Symbol.dispose }, () => {
   let calls: string[] = []
   let obj = {
     method(arg: string) {
@@ -94,19 +93,17 @@ testUsing('restores spy via using keyword', () => {
   }
   let original = obj.method
 
-  // eslint-disable-next-line no-lone-blocks
   {
-    // eslint-disable-next-line prefer-let/prefer-let
     using method = spyOn(obj, 'method', arg => arg.toUpperCase() + '!')
     equal(obj.method('a'), 'A!')
-    equal(calls, [])
+    deepEqual(calls, [])
     equal(method.callCount, 1)
-    is(obj.method === original, false)
+    equal(obj.method === original, false)
   }
 
-  is(obj.method === original, true)
+  equal(obj.method === original, true)
   equal(obj.method('b'), 'b!')
-  equal(calls, ['b'])
+  deepEqual(calls, ['b'])
 })
 
 test('mocks method', () => {
@@ -123,45 +120,45 @@ test('mocks method', () => {
   })
 
   equal(obj.method('a'), 'A!')
-  equal(calls, [])
-  is(method.called, true)
+  deepEqual(calls, [])
+  equal(method.called, true)
   equal(method.callCount, 1)
-  equal(method.calls, [['a']])
-  equal(method.results, ['A!'])
+  deepEqual(method.calls, [['a']])
+  deepEqual(method.results, ['A!'])
 })
 
 test('has spy for callback', () => {
   let fn = spy()
-  is(fn.called, false)
+  equal(fn.called, false)
   equal(fn.callCount, 0)
-  equal(fn.calls, [])
+  deepEqual(fn.calls, [])
   equal(fn.length, 0)
-  equal(fn.results, [])
+  deepEqual(fn.results, [])
 
-  is(fn('a', 'A'), undefined)
-  is(fn.called, true)
+  equal(fn('a', 'A'), undefined)
+  equal(fn.called, true)
   equal(fn.callCount, 1)
-  equal(fn.calls, [['a', 'A']])
-  equal(fn.results, [undefined])
+  deepEqual(fn.calls, [['a', 'A']])
+  deepEqual(fn.results, [undefined])
 
   fn.nextResult('B!')
   equal(fn('b', 'B'), 'B!')
   equal(fn.callCount, 2)
-  equal(fn.calls, [
+  deepEqual(fn.calls, [
     ['a', 'A'],
     ['b', 'B']
   ])
-  equal(fn.results, [undefined, 'B!'])
+  deepEqual(fn.results, [undefined, 'B!'])
 
-  is(fn('c', 'C'), undefined)
+  equal(fn('c', 'C'), undefined)
   equal(fn.callCount, 3)
-  equal(fn.results, [undefined, 'B!', undefined])
+  deepEqual(fn.results, [undefined, 'B!', undefined])
 
   let error = new Error('test')
   fn.nextError(error)
   throws(fn, error)
   equal(fn.callCount, 4)
-  equal(fn.results, [undefined, 'B!', undefined, undefined])
+  deepEqual(fn.results, [undefined, 'B!', undefined, undefined])
 })
 
 test('supports spy with callback', () => {
@@ -170,16 +167,16 @@ test('supports spy with callback', () => {
   equal(fn.length, 1)
 
   equal(fn('a'), 'a!')
-  is(fn.called, true)
+  equal(fn.called, true)
   equal(fn.callCount, 1)
-  equal(fn.calls, [['a']])
-  equal(fn.results, ['a!'])
+  deepEqual(fn.calls, [['a']])
+  deepEqual(fn.results, ['a!'])
 
   fn.nextResult('B!')
   equal(fn('b'), 'B!')
   equal(fn.callCount, 2)
-  equal(fn.calls, [['a'], ['b']])
-  equal(fn.results, ['a!', 'B!'])
+  deepEqual(fn.calls, [['a'], ['b']])
+  deepEqual(fn.results, ['a!', 'B!'])
 })
 
 test('supports remocking', () => {
@@ -190,8 +187,8 @@ test('supports remocking', () => {
 
   equal(fn('one', true), 'one!!!')
   equal(fn.callCount, 2)
-  equal(fn.calls, [['one'], ['one', true]])
-  equal(fn.results, ['ONE!', 'one!!!'])
+  deepEqual(fn.calls, [['one'], ['one', true]])
+  deepEqual(fn.results, ['ONE!', 'one!!!'])
 
   fn.onCall((name: string) => name + '?')
   equal(fn.length, 1)
@@ -200,8 +197,8 @@ test('supports remocking', () => {
 
   equal(fn('two'), 'two?')
   equal(fn.callCount, 4)
-  equal(fn.calls, [['one'], ['one', true], ['two'], ['two']])
-  equal(fn.results, ['ONE!', 'one!!!', 'TWO?', 'two?'])
+  deepEqual(fn.calls, [['one'], ['one', true], ['two'], ['two']])
+  deepEqual(fn.results, ['ONE!', 'one!!!', 'TWO?', 'two?'])
 })
 
 test('mock promises', async () => {
@@ -218,18 +215,16 @@ test('mock promises', async () => {
     calls.push(result)
   })
 
-  equal(calls, [])
+  deepEqual(calls, [] as string[])
   await resolve('two')
-  equal(calls, ['two'])
+  deepEqual(calls, ['two'])
 
   let reject = method.nextReject()
   obj.method().catch(error => {
     calls.push(error.message)
   })
 
-  equal(calls, ['two'])
+  deepEqual(calls, ['two'])
   await reject(new Error('three'))
-  equal(calls, ['two', 'three'])
+  deepEqual(calls, ['two', 'three'])
 })
-
-test.run()

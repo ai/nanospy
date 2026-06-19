@@ -29,7 +29,7 @@ function testNumber(a: number): void {
 let increase = spyOn(counter, 'increase')
 testBoolean(increase.called)
 testNumber(increase.callCount)
-testBoolean(increase.calls[0][0])
+testBoolean(increase.calls[0]![0])
 increase.nextError(new Error('Test'))
 increase.nextResult(10)
 
@@ -41,9 +41,14 @@ spyOn(counter, 'reset', base => {
 })
 
 let long = spyOn(counter, 'long')
-let resolve = long.nextResolve()
-counter.long()
-await resolve(10)
+async function test(): Promise<void> {
+  let resolve = long.nextResolve()
+  counter.long()
+  await resolve(10)
+}
+test().then(() => {
+  console.log('done')
+})
 
 restoreAll()
 
