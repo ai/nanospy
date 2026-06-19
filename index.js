@@ -75,6 +75,9 @@ function spyOn(obj, methodName, mock) {
   fn.restore = () => {
     obj[methodName] = origin
   }
+  if ('dispose' in Symbol) {
+    fn[Symbol.dispose] = fn.restore
+  }
 
   obj[methodName] = fn
 
