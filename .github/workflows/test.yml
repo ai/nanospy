@@ -19,7 +19,7 @@ jobs:
           version: 11
           runtime: node@26
       - name: Install dependencies
-        run: pnpm install --ignore-scripts
+        run: pnpm ci
       - name: Run tests
         run: pnpm test
   short:
@@ -38,7 +38,7 @@ jobs:
           version: 11
           runtime: node@${{ matrix.node }}
       - name: Install dependencies
-        run: pnpm install --ignore-scripts
+        run: pnpm ci
       - name: Run unit tests
         run: pnpm bnt
   no-using:
@@ -53,7 +53,7 @@ jobs:
           version: 11
           runtime: node@22
       - name: Install dependencies
-        run: pnpm install --ignore-scripts
+        run: pnpm ci
       - name: Run unit tests
         run: node --test test/index.test.ts
   old:
