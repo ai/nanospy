@@ -70,8 +70,8 @@ export function spy<
 export function spyOn<Obj extends object, Method extends Methods<Obj>>(
   obj: Obj,
   methodName: Method,
-  mock?: Obj[Method]
-): Spy<Obj[Method]>
+  mock?: Extract<Obj[Method], (...args: any[]) => any>
+): Spy<Extract<Obj[Method], (...args: any[]) => any>>
 
 /**
  * Remove all spies from objects.
